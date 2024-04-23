@@ -1,0 +1,74 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define TAMANHO_MAX 100
+#define CAMPO_MAX 100
+
+typedef struct{
+    char nome[50];
+    char numero[10];
+    char curso[30];
+    float nota1;
+    float nota2;
+} Aluno;
+
+int main(){
+    FILE *Entradacvs;
+    Entradacvs = fopen("DadosEntrada.csv", "r"); 
+    FILE *Saidacsv;
+    Saidacsv = fopen("SaidaData.csv", "wt");
+    float media;
+    char *field;
+    int field_count = 0;
+    char linha[TAMANHO_MAX];
+    Aluno dados;
+
+    if (Entradacvs == NULL || Saidacsv == NULL){
+        fprintf(stderr, "Erro ao abrir o arquivo.\n");
+        return 1;
+    }
+
+    fgets(linha, sizeof(linha), Entradacvs); 
+
+    while (fgets(linha, sizeof(linha), Entradacvs)){
+        field = strtok(linha, ",");
+        field_count = 0; 
+
+        while (field != NULL && field_count < CAMPO_MAX){
+            switch (field_count){
+                case 0:
+                    strcpy(dados.nome, field);
+                    break;
+                case 1:
+                    strcpy(dados.numero, field);
+                    break;
+                case 2:
+                    strcpy(dados.curso, field);
+                    break;
+                case 3:
+                    dados.nota1 = atof(field); 
+                    break;
+                case 4:
+                    dados.nota2 = atof(field);
+                    break;
+            }
+            field_count++;
+            field = strtok(NULL, ",");
+        }
+
+     
+        media = (dados.nota1 + dados.nota2) / 2.0;
+
+        if (media > 7) {
+            fprintf(Saidacsv, "%s, %.2f, APROVADO\n", dados.nome, media);
+        } else {
+            fprintf(Saidacsv, "%s, %.2f, REPROVADO\n", dados.nome, media);
+        }
+    }
+
+    fclose(Entradacvs);
+    fclose(Saidacsv);
+
+    return 0;
+}
